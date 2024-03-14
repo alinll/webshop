@@ -97,5 +97,3 @@ public class User {
         return Objects.hash(getEmail(), getPassword(), getPhone(), getCity(), getStreet());
     }
 }
-
-

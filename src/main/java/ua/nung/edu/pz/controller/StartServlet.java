@@ -50,16 +50,20 @@ public class StartServlet extends HttpServlet {
         out.println(IndexView.getInstance().getPage("Green Shop", body));
 
         User user = new User();
-        user.setEmail("email@email.com");
+        user.setEmail("email1@email.com");
         user.setPassword("112211221122");
         user.setDisplayName("Test User");
         Firebase firebase = Firebase.getInstance();
-        if (firebase.getUserByEmail(user.getEmail()) != "OK"){
-            // TODO alina: login user
-            System.out.println("User Exist");
-        }
-        else {
-            //String userMsg = Firebase.getInstance().createUser(user);
+        if (firebase.getUserByEmail(user.getEmail()).equals(Firebase.USER_EXISTS)) {
+            String firebaseResponse = firebase.signInWithEmailAndPassword(user.getEmail(), user.getPassword());
+            if(firebaseResponse.equals(Firebase.PASSWORD_OK)) {
+                System.out.println(Firebase.PASSWORD_OK);
+            }  else {
+                System.out.println("Wrong Password");
+            }
+        } else {
+            System.out.println("User NOT Exist");
+            String userMsg = Firebase.getInstance().createUser(user);
         }
     }
 
@@ -87,12 +91,14 @@ public class StartServlet extends HttpServlet {
         String[] firebaseConfig = readFirebaseConfig();
         Firebase.getInstance().setFirebaseConfigPath(firebaseConfig[0]);
         Firebase.getInstance().setFirebaseName(firebaseConfig[1]);
+        Firebase.getInstance().setApiKey(firebaseConfig[2]);
+        Firebase.getInstance().setSignInUrl(firebaseConfig[3]);
         Firebase.getInstance().init();
     }
 
     private String[] readFirebaseConfig() {
         Properties props = new Properties();
-        String[] firebasrProp = new String[2];
+        String[] firebasrProp = new String[4];
         InputStream is = getClass().getClassLoader().getResourceAsStream("app.properties");
         try {
             props.load(is);
@@ -101,6 +107,8 @@ public class StartServlet extends HttpServlet {
         }
         firebasrProp[0] = props.getProperty("file.path");
         firebasrProp[1] = props.getProperty("firebase.name");
+        firebasrProp[2] = props.getProperty("web.api.key");
+        firebasrProp[3] = props.getProperty("signInUrl");
         return firebasrProp;
     }
 }
