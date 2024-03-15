@@ -115,7 +115,6 @@ public class Firebase {
                 return errorMessage;
             }
         } catch (Exception e) {
-            System.out.println("Main catch " + e.getMessage());
             return e.getMessage();
         }
     }
@@ -136,3 +135,4 @@ public class Firebase {
         this.signInUrl = signInUrl;
     }
 }
+

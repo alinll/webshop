@@ -28,7 +28,6 @@ public class StartServlet extends HttpServlet {
         switch (request.getPathInfo()) {
             case "/contacts":
                 context = "<h2>Our Contacts!</h2>\n";
-                context += ContactView.getContactBody();
                 break;
             case "/login":
                 context = "<h2>Login!</h2>\n";
@@ -49,10 +48,23 @@ public class StartServlet extends HttpServlet {
 
         out.println(IndexView.getInstance().getPage("Green Shop", body));
 
+        //TODO: remove after successfully testing
         User user = new User();
         user.setEmail("email1@email.com");
         user.setPassword("112211221122");
         user.setDisplayName("Test User");
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String contextPath = request.getContextPath();
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(password);
+
+        // login / register
         Firebase firebase = Firebase.getInstance();
         if (firebase.getUserByEmail(user.getEmail()).equals(Firebase.USER_EXISTS)) {
             String firebaseResponse = firebase.signInWithEmailAndPassword(user.getEmail(), user.getPassword());
@@ -65,16 +77,6 @@ public class StartServlet extends HttpServlet {
             System.out.println("User NOT Exist");
             String userMsg = Firebase.getInstance().createUser(user);
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String contextPath = request.getContextPath();
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(password);
 
         System.out.println(user);
 
@@ -88,15 +90,10 @@ public class StartServlet extends HttpServlet {
         IndexView indexView = IndexView.getInstance();
         indexView.setPath(path);
 
-        String[] firebaseConfig = readFirebaseConfig();
-        Firebase.getInstance().setFirebaseConfigPath(firebaseConfig[0]);
-        Firebase.getInstance().setFirebaseName(firebaseConfig[1]);
-        Firebase.getInstance().setApiKey(firebaseConfig[2]);
-        Firebase.getInstance().setSignInUrl(firebaseConfig[3]);
-        Firebase.getInstance().init();
+        initFirebase();
     }
 
-    private String[] readFirebaseConfig() {
+    private void initFirebase() {
         Properties props = new Properties();
         String[] firebasrProp = new String[4];
         InputStream is = getClass().getClassLoader().getResourceAsStream("app.properties");
@@ -105,10 +102,10 @@ public class StartServlet extends HttpServlet {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        firebasrProp[0] = props.getProperty("file.path");
-        firebasrProp[1] = props.getProperty("firebase.name");
-        firebasrProp[2] = props.getProperty("web.api.key");
-        firebasrProp[3] = props.getProperty("signInUrl");
-        return firebasrProp;
+        Firebase.getInstance().setFirebaseConfigPath(props.getProperty("file.path"));
+        Firebase.getInstance().setFirebaseName(props.getProperty("firebase.name"));
+        Firebase.getInstance().setApiKey(props.getProperty("web.api.key"));
+        Firebase.getInstance().setSignInUrl(props.getProperty("signInUrl"));
+        Firebase.getInstance().init();
     }
 }
