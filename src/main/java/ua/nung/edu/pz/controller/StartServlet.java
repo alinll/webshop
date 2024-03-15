@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -24,11 +25,13 @@ public class StartServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         String body = "";
         String context = "";
+        HttpSession httpSession = request.getSession();
+        User user = (User) httpSession.getAttribute(User.USER_SESSION_NAME);
+        String userName = user == null ? "" : user.getDisplayName();
 
         switch (request.getPathInfo()) {
             case "/contacts":
                 context = "<h2>Our Contacts!</h2>\n";
-                context += ContactView.getContactBody();
                 break;
             case "/login":
                 context = "<h2>Login!</h2>\n";
@@ -43,17 +46,15 @@ public class StartServlet extends HttpServlet {
 
 
         body = IndexView.getInstance().getBody(
-                IndexView.getInstance().getHeader(""),
+                IndexView.getInstance().getHeader(userName),
                 IndexView.getInstance().getFooter(""),
                 context);
 
         out.println(IndexView.getInstance().getPage("Green Shop", body));
 
-        //TODO: remove after successfully testing
-        User user = new User();
-        user.setEmail("email1@email.com");
-        user.setPassword("112211221122");
-        user.setDisplayName("Test User");
+//        user.setEmail("email1@email.com");
+//        user.setPassword("112211221122");
+//        user.setDisplayName("Test User");
     }
 
     @Override
@@ -61,6 +62,7 @@ public class StartServlet extends HttpServlet {
         String contextPath = request.getContextPath();
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+        HttpSession httpSession;
         User user = new User();
         user.setEmail(email);
         user.setPassword(password);
@@ -71,6 +73,9 @@ public class StartServlet extends HttpServlet {
             String firebaseResponse = firebase.signInWithEmailAndPassword(user.getEmail(), user.getPassword());
             if(firebaseResponse.equals(Firebase.PASSWORD_OK)) {
                 System.out.println(Firebase.PASSWORD_OK);
+                user.setDisplayName("Best User");
+                httpSession = request.getSession();
+                httpSession.setAttribute(User.USER_SESSION_NAME, user);
             }  else {
                 System.out.println("Wrong Password");
             }
@@ -96,7 +101,6 @@ public class StartServlet extends HttpServlet {
 
     private void initFirebase() {
         Properties props = new Properties();
-        String[] firebasrProp = new String[4];
         InputStream is = getClass().getClassLoader().getResourceAsStream("app.properties");
         try {
             props.load(is);
@@ -110,3 +114,4 @@ public class StartServlet extends HttpServlet {
         Firebase.getInstance().init();
     }
 }
+
