@@ -32,6 +32,7 @@ public class StartServlet extends HttpServlet {
         switch (request.getPathInfo()) {
             case "/contacts":
                 context = "<h2>Our Contacts!</h2>\n";
+                context += ContactView.getContactBody();
                 break;
             case "/login":
                 context = "<h2>Login!</h2>\n";
