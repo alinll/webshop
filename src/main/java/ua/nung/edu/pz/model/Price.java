@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class Price {
     private long id;
+
     private long good_id;
     private double from_supplier;
     private double for_client;
@@ -11,15 +12,6 @@ public class Price {
     private String deleted_at;
 
     public Price() {
-
-    }
-
-    public long getGood_id() {
-        return good_id;
-    }
-
-    public void setGood_id(long good_id) {
-        this.good_id = good_id;
     }
 
     public Price(long id, long good_id, double from_supplier, double for_client, String created_at, String deleted_at) {
@@ -39,17 +31,44 @@ public class Price {
         this.id = id;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Price price = (Price) o;
-        return id == price.id && good_id == price.good_id && Double.compare(from_supplier, price.from_supplier) == 0 && Double.compare(for_client, price.for_client) == 0 && Objects.equals(created_at, price.created_at) && Objects.equals(deleted_at, price.deleted_at);
+    public long getGood_id() {
+        return good_id;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, good_id, from_supplier, for_client, created_at, deleted_at);
+    public void setGood_id(long good_id) {
+        this.good_id = good_id;
+    }
+
+    public double getFrom_supplier() {
+        return from_supplier;
+    }
+
+    public void setFrom_supplier(double from_supplier) {
+        this.from_supplier = from_supplier;
+    }
+
+    public double getFor_client() {
+        return for_client;
+    }
+
+    public void setFor_client(double for_client) {
+        this.for_client = for_client;
+    }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
+    }
+
+    public String getDeleted_at() {
+        return deleted_at;
+    }
+
+    public void setDeleted_at(String deleted_at) {
+        this.deleted_at = deleted_at;
     }
 
     @Override
@@ -64,35 +83,16 @@ public class Price {
                 '}';
     }
 
-    public String getDeleted_at() {
-        return deleted_at;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Price)) return false;
+        Price price = (Price) o;
+        return getId() == price.getId() && getGood_id() == price.getGood_id() && Double.compare(getFrom_supplier(), price.getFrom_supplier()) == 0 && Double.compare(getFor_client(), price.getFor_client()) == 0 && Objects.equals(getCreated_at(), price.getCreated_at()) && Objects.equals(getDeleted_at(), price.getDeleted_at());
     }
 
-    public void setDeleted_at(String deleted_at) {
-        this.deleted_at = deleted_at;
-    }
-
-    public String getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(String created_at) {
-        this.created_at = created_at;
-    }
-
-    public double getFor_client() {
-        return for_client;
-    }
-
-    public void setFor_client(double for_client) {
-        this.for_client = for_client;
-    }
-
-    public double getFrom_supplier() {
-        return from_supplier;
-    }
-
-    public void setFrom_supplier(double from_supplier) {
-        this.from_supplier = from_supplier;
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getGood_id(), getFrom_supplier(), getFor_client(), getCreated_at(), getDeleted_at());
     }
 }
