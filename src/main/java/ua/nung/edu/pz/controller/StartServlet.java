@@ -4,6 +4,7 @@ import ua.nung.edu.pz.model.Firebase;
 import ua.nung.edu.pz.model.User;
 import ua.nung.edu.pz.view.ContactView;
 import ua.nung.edu.pz.view.IndexView;
+import ua.nung.edu.pz.view.ViewConfig;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -93,7 +94,11 @@ public class StartServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        String path = getServletContext().getRealPath("/html/");
+        String path = getServletContext().getRealPath("html/");
+
+        ViewConfig viewConfig = ViewConfig.getInstance();
+        viewConfig.setPath(path);
+
         IndexView indexView = IndexView.getInstance();
         indexView.setPath(path);
 
@@ -115,4 +120,3 @@ public class StartServlet extends HttpServlet {
         Firebase.getInstance().init();
     }
 }
-
