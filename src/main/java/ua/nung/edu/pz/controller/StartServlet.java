@@ -4,6 +4,7 @@ import ua.nung.edu.pz.model.Firebase;
 import ua.nung.edu.pz.model.User;
 import ua.nung.edu.pz.view.ContactView;
 import ua.nung.edu.pz.view.IndexView;
+import ua.nung.edu.pz.view.MainPage;
 import ua.nung.edu.pz.view.ViewConfig;
 
 import javax.servlet.ServletException;
@@ -53,6 +54,13 @@ public class StartServlet extends HttpServlet {
                 context);
 
         out.println(IndexView.getInstance().getPage("Green Shop", body));
+
+        String builderPage = MainPage.Builder.newInstance()
+                .setTitle("Green Shop")
+                .build()
+                .getFullPage();
+
+        System.out.println(builderPage);
 
 //        user.setEmail("email1@email.com");
 //        user.setPassword("112211221122");

@@ -1,7 +1,5 @@
 package ua.nung.edu.pz.view;
 
-import org.apache.http.Header;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -11,24 +9,30 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class MainPage {
-    private String header;
-    private String footer;
+    private String fullPage;
 
     public MainPage(Builder builder) {
-        this.header = builder.header;
-        this.footer = builder.footer;
+        this.fullPage = builder.fullPage;
+    }
+
+    public String getFullPage() {
+        return fullPage;
     }
 
     public static class Builder {
+        // inner use
         private static String path;
+        // inner use
         private String emptyPage;
+        private String fullPage;
+        private String title;
         private String header;
         private String footer;
 
         public void setPath(String path) {
             this.path = path;
         }
-        private String getHtml(String filename) {
+        private static String getHtml(String filename) {
             StringBuilder strb = new StringBuilder("\n");
             Path file = Paths.get(path + filename + ".html");
             Charset charset = StandardCharsets.UTF_8;
@@ -68,9 +72,7 @@ public class MainPage {
 
         // TODO implement empty page loding
         public static Builder newInstance() {
-            if (path.length() == 0) {
-
-            }
+            path = ViewConfig.getInstance().getPath();
             return new Builder();
         }
         public Builder setHeader(String header) {
@@ -83,7 +85,15 @@ public class MainPage {
             return this;
         }
 
+        public Builder setTitle(String title) {
+            this.title = title;
+            return this;
+        }
+
         public MainPage build() {
+            emptyPage = getHtml("emptyPage");
+            this.fullPage = this.title != null ? emptyPage.replace("<!--####title###-->", title)
+                    : emptyPage;
             return new MainPage(this);
         }
     }
