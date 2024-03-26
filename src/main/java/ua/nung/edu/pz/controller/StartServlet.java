@@ -94,7 +94,7 @@ public class StartServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        String path = getServletContext().getRealPath("html/");
+        String path = getServletContext().getRealPath("/html/");
 
         ViewConfig viewConfig = ViewConfig.getInstance();
         viewConfig.setPath(path);
