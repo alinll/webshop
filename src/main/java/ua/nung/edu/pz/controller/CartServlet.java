@@ -1,6 +1,6 @@
 package ua.nung.edu.pz.controller;
 
-import ua.nung.edu.pz.view.IndexView;
+import ua.nung.edu.pz.view.MainPage;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,12 +18,14 @@ public class CartServlet extends HttpServlet {
 
         String context = "<h2>Cart!</h2>\n";
 
-        String body = IndexView.getInstance().getBody(
-                IndexView.getInstance().getHeader(""),
-                IndexView.getInstance().getFooter(""),
-                context
-        );
+        String builderPage = MainPage.Builder.newInstance()
+                .setTitle("Green Shop")
+                .setHeader("")
+                .setBody(context)
+                .setFooter()
+                .build()
+                .getFullPage();
 
-        out.println(IndexView.getInstance().getPage("Green Shop", body));
+        out.println(builderPage);
     }
 }
